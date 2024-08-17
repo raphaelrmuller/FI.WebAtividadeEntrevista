@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FI.WebAtividadeEntrevista.Models.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace WebAtividadeEntrevista.Models
     public class ClienteModel
     {
         public long Id { get; set; }
-        
+
         /// <summary>
         /// CEP
         /// </summary>
@@ -63,9 +64,21 @@ namespace WebAtividadeEntrevista.Models
         public string Sobrenome { get; set; }
 
         /// <summary>
+        /// CPF
+        /// </summary>
+        private CPFObjectValue _cpf;
+
+        [Required]
+        public string CPF
+        {
+            get { return _cpf == null ? "" : _cpf.ToString(); }
+            set { _cpf = new CPFObjectValue(value); }
+        }
+
+        /// <summary>
         /// Telefone
         /// </summary>
         public string Telefone { get; set; }
 
-    }    
+    }
 }

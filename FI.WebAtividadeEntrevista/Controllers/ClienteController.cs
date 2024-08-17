@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
+using FI.WebAtividadeEntrevista.Models.ValueObjects;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -26,21 +27,29 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-            
+
+            if (((CPFObjectValue)model.CPF).IsValid == false)
+            {
+                ModelState.AddModelError("CPF", ((CPFObjectValue)model.CPF).MessageError);
+            }
+            if (bo.VerificarExistencia(model.CPF))
+            {
+                ModelState.AddModelError("CPF", "CPF já cadastrado");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
                                       from error in item.Errors
                                       select error.ErrorMessage).ToList();
-
                 Response.StatusCode = 400;
                 return Json(string.Join(Environment.NewLine, erros));
             }
             else
             {
-                
+
                 model.Id = bo.Incluir(new Cliente()
-                {                    
+                {
                     CEP = model.CEP,
                     Cidade = model.Cidade,
                     Email = model.Email,
@@ -49,10 +58,11 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = model.Nacionalidade,
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
+                    Telefone = model.Telefone,
+                    CPF = model.CPF
                 });
 
-           
+
                 return Json("Cadastro efetuado com sucesso");
             }
         }
@@ -61,7 +71,15 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Alterar(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-       
+            if (((CPFObjectValue)model.CPF).IsValid == false)
+            {
+                ModelState.AddModelError("CPF", ((CPFObjectValue)model.CPF).MessageError);
+            }
+            if (bo.VerificarExistencia(model.CPF))
+            {
+                ModelState.AddModelError("CPF", "CPF já cadastrado");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -86,7 +104,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Sobrenome = model.Sobrenome,
                     Telefone = model.Telefone
                 });
-                               
+
                 return Json("Cadastro alterado com sucesso");
             }
         }
@@ -111,10 +129,11 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
+                    Telefone = cliente.Telefone,
+                    CPF = cliente.CPF,
                 };
 
-            
+
             }
 
             return View(model);
@@ -146,5 +165,6 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
+
     }
 }
