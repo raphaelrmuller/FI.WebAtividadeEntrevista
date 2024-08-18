@@ -17,7 +17,7 @@ namespace FI.WebAtividadeEntrevista.Models
         /// <summary>
         /// Id do Cliente
         /// </summary>
-        public long IdCliente { get; }
+        public long IdCliente { get; set; }
 
         /// <summary>
         /// Nome do Beneficiário

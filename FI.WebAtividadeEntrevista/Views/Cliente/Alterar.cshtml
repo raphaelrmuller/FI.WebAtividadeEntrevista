@@ -8,9 +8,15 @@
         var obj = @Html.Raw(Json.Encode(Model));
         var urlRetorno = '@Url.Action("Index", "Cliente", new { area = "" })';
     </script>
-    @Scripts.Render("~/bundles/altClientes")
-    @Scripts.Render("~/bundles/listBeneficiarios")
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var beneficiarios = @Html.Raw(Json.Encode(Model.Beneficiarios));
+            ModalDialogBeneficiarios(beneficiarios, false);
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/altClientes")
 }
 <h2>@Html.Raw(ViewBag.Title)</h2>
 @Html.Partial("Forms")

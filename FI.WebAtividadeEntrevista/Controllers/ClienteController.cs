@@ -134,10 +134,10 @@ namespace WebAtividadeEntrevista.Controllers
         [HttpGet]
         public ActionResult Alterar(long id)
         {
+            BoBeneficiario boBeneficiario = new BoBeneficiario();
             BoCliente bo = new BoCliente();
             Cliente cliente = bo.Consultar(id);
             Models.ClienteModel model = null;
-
             if (cliente != null)
             {
                 model = new ClienteModel()
@@ -153,11 +153,15 @@ namespace WebAtividadeEntrevista.Controllers
                     Sobrenome = cliente.Sobrenome,
                     Telefone = cliente.Telefone,
                     CPF = cliente.CPF,
+                    Beneficiarios = boBeneficiario.Listar(id).Select(x => new BeneficiarioModel()
+                    {
+                        CPF = x.CPF,
+                        Id = x.Id,
+                        IdCliente = x.IdCliente,
+                        Nome = x.Nome
+                    }).ToList()
                 };
-
-
             }
-
             return View(model);
         }
 
