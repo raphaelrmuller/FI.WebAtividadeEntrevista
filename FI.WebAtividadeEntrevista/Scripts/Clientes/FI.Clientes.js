@@ -2,6 +2,17 @@
 $(document).ready(function () {
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
+        // Extrai a lista de beneficiários da tabela
+        var beneficiarios = [];
+        $('#grid tbody tr').each(function () {
+            var nome = $(this).find('input[name*="Nome"]').val();
+            var cpf = $(this).find('input[name*="CPF"]').val();
+
+            beneficiarios.push({
+                Nome: nome,
+                CPF: cpf
+            });
+        });
         $.ajax({
             url: urlPost,
             method: "POST",
@@ -16,6 +27,7 @@ $(document).ready(function () {
                 "Logradouro": $(this).find("#Logradouro").val(),
                 "Telefone": $(this).find("#Telefone").val(),
                 "CPF": $(this).find("#CPF").val(),
+                "Beneficiarios": beneficiarios // Adiciona a lista de beneficiários
             },
             error:
             function (r) {

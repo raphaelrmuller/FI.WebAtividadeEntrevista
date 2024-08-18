@@ -1,4 +1,6 @@
-﻿using FI.WebAtividadeEntrevista.Models.ValueObjects;
+﻿using FI.AtividadeEntrevista.DML;
+using FI.WebAtividadeEntrevista.Models;
+using FI.WebAtividadeEntrevista.Models.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -71,7 +73,7 @@ namespace WebAtividadeEntrevista.Models
         [Required]
         public string CPF
         {
-            get { return _cpf == null ? "" : _cpf.ToString(); }
+            get { return _cpf == null ? "" : _cpf.NumeroCPF; }
             set { _cpf = new CPFObjectValue(value); }
         }
 
@@ -79,6 +81,11 @@ namespace WebAtividadeEntrevista.Models
         /// Telefone
         /// </summary>
         public string Telefone { get; set; }
+
+        /// <summary>
+        /// Beneficiarios
+        /// </summary>
+        public List<BeneficiarioModel> Beneficiarios { get; set; }
 
     }
 }

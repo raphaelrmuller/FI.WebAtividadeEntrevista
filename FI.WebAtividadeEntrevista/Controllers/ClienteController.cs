@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
 using FI.WebAtividadeEntrevista.Models.ValueObjects;
+using FI.WebAtividadeEntrevista.Models;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -16,7 +17,6 @@ namespace WebAtividadeEntrevista.Controllers
         {
             return View();
         }
-
 
         public ActionResult Incluir()
         {
@@ -28,10 +28,22 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
 
+            if (model.Beneficiarios != null)
+            {
+                foreach (BeneficiarioModel item in model.Beneficiarios)
+                {
+                    if (((CPFObjectValue)item.CPF).IsValid == false)
+                    {
+                        ModelState.AddModelError("CPF", ((CPFObjectValue)item.CPF).MessageError);
+                    }
+                }
+            }
+
             if (((CPFObjectValue)model.CPF).IsValid == false)
             {
                 ModelState.AddModelError("CPF", ((CPFObjectValue)model.CPF).MessageError);
             }
+
             if (bo.VerificarExistencia(model.CPF))
             {
                 ModelState.AddModelError("CPF", "CPF já cadastrado");
@@ -47,7 +59,6 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-
                 model.Id = bo.Incluir(new Cliente()
                 {
                     CEP = model.CEP,
@@ -61,8 +72,17 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone,
                     CPF = model.CPF
                 });
-
-
+                if (model.Beneficiarios.Any())
+                {
+                    BoBeneficiario boBeneficiario = new BoBeneficiario();
+                    List<Beneficiario> beneficiarios = model.Beneficiarios.Select(x => new Beneficiario()
+                    {
+                        CPF = x.CPF,
+                        IdCliente = model.Id,
+                        Nome = x.Nome
+                    }).ToList();
+                    boBeneficiario.Incluir(beneficiarios);
+                }
                 return Json("Cadastro efetuado com sucesso");
             }
         }
@@ -75,9 +95,11 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 ModelState.AddModelError("CPF", ((CPFObjectValue)model.CPF).MessageError);
             }
-            if (bo.VerificarExistencia(model.CPF))
+            var consultaCPF = bo.Consultar(model.Id);
+
+            if (consultaCPF.CPF != model.CPF && bo.VerificarExistencia(model.CPF.ToString()))
             {
-                ModelState.AddModelError("CPF", "CPF já cadastrado");
+                ModelState.AddModelError("CPF", "CPF já cadastrado para outro cliente");
             }
 
             if (!this.ModelState.IsValid)
