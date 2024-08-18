@@ -129,7 +129,8 @@
     <Compile Include="Models\BeneficiarioModel.cs" />
     <Compile Include="Models\ClienteBeneficiarioModel.cs" />
     <Compile Include="Models\ClienteModel.cs" />
-    <Compile Include="Models\ValueObjects\CPFObjectValue.cs" />
+    <Compile Include="Models\ValueObjects\Attributes\CPFValidationAttribute .cs" />
+    <Compile Include="Models\ValueObjects\CPF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +190,7 @@
     <Content Include="Scripts\Clientes\FI.AltClientes.js" />
     <Content Include="Scripts\Clientes\FI.Clientes.js" />
     <Content Include="Scripts\Clientes\FI.ListClientes.js" />
+    <Content Include="Scripts\Clientes\FI.Util.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />

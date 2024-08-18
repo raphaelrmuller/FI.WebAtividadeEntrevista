@@ -2,33 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using FI.WebAtividadeEntrevista.Models.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace FI.WebAtividadeEntrevista.Models.ValueObjects
+namespace FI.WebAtividadeEntrevista.Models.Attributes
 {
 
-    public class CPFObjectValue
+    public class CPFValidationAttribute : ValidationAttribute
     {
-        public string NumeroCPF { get; set; }
-        public string MessageError { get; }
-        public bool IsValid { get; }
-
-        public CPFObjectValue(string numero)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(numero))
+            var cpf = value as CPF;
+
+            if (string.IsNullOrWhiteSpace(cpf))
             {
-                MessageError = "O CPF não pode ser vazio ou nulo.";
+                return new ValidationResult("O CPF não pode ser vazio ou nulo.");
             }
-            numero = ClearFormat(numero);
-            if (!VerifyIsValid(numero))
+
+            var cleancpf = ClearFormat(cpf);
+
+            if (!VerifyIsValid(cleancpf))
             {
-                MessageError = "O CPF informado é inválido.";
+                return new ValidationResult($"O CPF informado é inválido.{cpf}");
             }
-            else
-            {
-                IsValid = true;
-            }
-            NumeroCPF = numero;
+
+            return ValidationResult.Success;
         }
 
         private string ClearFormat(string cpf)
@@ -82,35 +81,6 @@ namespace FI.WebAtividadeEntrevista.Models.ValueObjects
             digito = digito + resto.ToString();
 
             return cpf.EndsWith(digito);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            CPFObjectValue other = (CPFObjectValue)obj;
-            return NumeroCPF == other.NumeroCPF;
-        }
-
-        public override int GetHashCode()
-        {
-            return NumeroCPF.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return Convert.ToUInt64(NumeroCPF).ToString(@"000\.000\.000\-00");
-        }
-
-        public static implicit operator CPFObjectValue(string numero)
-        {
-            return new CPFObjectValue(numero);
-        }
-
-        public static implicit operator string(CPFObjectValue cpf)
-        {
-            return cpf.NumeroCPF;
         }
     }
 

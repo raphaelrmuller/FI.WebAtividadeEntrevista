@@ -9,7 +9,7 @@
 
             beneficiarios.push({
                 Nome: nome,
-                CPF: cpf
+                "CPF.NumeroCPF": cpf
             });
         });
         $.ajax({
@@ -25,7 +25,7 @@
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
                 "Telefone": $(this).find("#Telefone").val(),
-                "CPF": $(this).find("#CPF").val(),
+                "CPF.NumeroCPF": $(this).find("#CPF").val(),
                 "Beneficiarios": beneficiarios 
             },
             error:
@@ -68,6 +68,7 @@ function ModalDialog(titulo, texto) {
     $('body').append(texto);
     $('#' + random).modal('show');
 }
+
 function ModalDialogBeneficiarios() {
     var texto = '<div id="modal-beneficiarios" class="modal fade">                                                                                                                  ' +
         '    <div class="modal-dialog">                                                                                                                                     ' +
@@ -159,7 +160,3 @@ function AddRowGrid() {
     });
 
 }
-
-
-
-

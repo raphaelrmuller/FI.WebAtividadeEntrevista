@@ -1,4 +1,5 @@
-﻿using FI.WebAtividadeEntrevista.Models.ValueObjects;
+﻿using FI.WebAtividadeEntrevista.Models.Attributes;
+using FI.WebAtividadeEntrevista.Models.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,12 +29,12 @@ namespace FI.WebAtividadeEntrevista.Models
         /// <summary>
         /// CPF do Beneficiário
         /// </summary>
-        private CPFObjectValue _cpf;
+        /// <summary>
+        /// CPF
+        /// </summary>
+
         [Required]
-        public string CPF
-        {
-            get { return _cpf == null ? "" : _cpf.ToString(); }
-            set { _cpf = new CPFObjectValue(value); }
-        }
+        [CPFValidationAttribute]
+        public CPF CPF { get; set; }
     }
 }

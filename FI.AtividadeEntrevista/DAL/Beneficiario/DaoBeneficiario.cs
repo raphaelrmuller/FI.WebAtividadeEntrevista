@@ -10,6 +10,16 @@ namespace FI.AtividadeEntrevista.DAL
 {
     internal class DaoBeneficiario : AcessoDados
     {
+        internal void Alterar(DML.Beneficiario beneficiario)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("ID", beneficiario.Id));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("NOME", beneficiario.Nome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", beneficiario.IdCliente));
+            base.Executar("FI_SP_AltBenef", parametros);
+        } 
         internal long Incluir(DML.Beneficiario beneficiario)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();

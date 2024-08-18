@@ -20,55 +20,47 @@ namespace FI.WebAtividadeEntrevista.Controllers
         }
 
 
-        [HttpPost]
-        public JsonResult Incluir(BeneficiarioModel model)
-        {
-            BoBeneficiario bo = new BoBeneficiario();
-            if (((CPFObjectValue)model.CPF).IsValid == false)
-            {
-                ModelState.AddModelError("CPF", ((CPFObjectValue)model.CPF).MessageError);
-            }
-            if (bo.VerificarExistencia(model.CPF, model.IdCliente))
-            {
-                ModelState.AddModelError("CPF", "Beneficiário já cadastrado para esse cliente");
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    Beneficiario beneficiario = new Beneficiario()
-                    {
-                        CPF = model.CPF,
-                        IdCliente = model.IdCliente,
-                        Nome = model.Nome
-                    };
+        //[HttpPost]
+        //public JsonResult Incluir(BeneficiarioModel model)
+        //{
+        //    BoBeneficiario bo = new BoBeneficiario();
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            Beneficiario beneficiario = new Beneficiario()
+        //            {
+        //                CPF = model.CPF.NumeroCPF,
+        //                IdCliente = model.IdCliente,
+        //                Nome = model.Nome
+        //            };
 
-                    bo.Incluir(beneficiario);
+        //            bo.Incluir(beneficiario);
 
-                    return Json(new { success = true });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { success = false, message = ex.Message });
-                }
-            }
-            return Json(new { success = false, message = "Dados inválidos." });
-        }
+        //            return Json(new { success = true });
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Json(new { success = false, message = ex.Message });
+        //        }
+        //    }
+        //    return Json(new { success = false, message = "Dados inválidos." });
+        //}
 
-        [HttpPost]
-        public JsonResult Listar(int idCliente)
-        {
-            try
-            {
-                BoBeneficiario bo = new BoBeneficiario();
-                List<Beneficiario> beneficiarios = bo.Listar(idCliente);                
-                return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = beneficiarios.Count });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Result = "ERROR", Message = ex.Message });
-            }
+        //[HttpPost]
+        //public JsonResult Listar(int idCliente)
+        //{
+        //    try
+        //    {
+        //        BoBeneficiario bo = new BoBeneficiario();
+        //        List<Beneficiario> beneficiarios = bo.Listar(idCliente);
+        //        return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = beneficiarios.Count });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { Result = "ERROR", Message = ex.Message });
+        //    }
 
-        }
+        //}
     }
 }
