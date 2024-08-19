@@ -23,10 +23,10 @@ namespace FI.AtividadeEntrevista.BLL
         /// Inclui ou altera uma lista de beneficiarios
         /// </summary>
         /// <param name="beneficiario">Objeto de beneficiario</param>
-        public long IncluirAlterar(List<DML.Beneficiario> beneficiarios)
+        public long IncluirAlterar(List<DML.Beneficiario> beneficiarios,long idCliente)
         {
             DAL.DaoBeneficiario daoBeneficiario = new DAL.DaoBeneficiario();            
-            return daoBeneficiario.IncluirAlterarDeletar(beneficiarios);            
+            return daoBeneficiario.IncluirAlterarDeletar(beneficiarios,idCliente);            
         }
 
         /// <summary>

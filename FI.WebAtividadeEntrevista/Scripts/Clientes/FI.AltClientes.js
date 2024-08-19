@@ -127,7 +127,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
         '            </div>' +
         '            <div class="modal-body">' +
         '                <div class="row">' +
-        '                    <input type="text" id="IDBENEF">'+
+        '                    <input type="hidden" id="IDBENEF">'+
         '                    <div class="col-md-4">' +
         '                        <div class="form-group">' +
         '                            <label for="Nome">Nome:</label>' +
@@ -150,8 +150,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
         '                    <div class="col-md-12">' +
         '                        <table id="grid" class="table table-lg">' +
         '                            <thead>' +
-        '                                <tr>' +
-        '                                    <th>Id</th>' +
+        '                                <tr>' +        
         '                                    <th>Nome</th>' +
         '                                    <th>CPF</th>' +
         '                                    <th>Ações</th>' +
@@ -198,11 +197,10 @@ function AddRowGrid(nome, cpf, index, id) {
     id = id || -1;
 
     let $newRow = $('<tr>');
-    $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].Id" value="' + id + '">' + id));
     $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].Nome" value="' + nome + '">' + nome));
     $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].CPF" value="' + cpf + '">' + formatarCPF(cpf)));
-    $newRow.append($('<td>').append('<button class="atualizar-row btn btn-primary" style="margin-right: 0px;">Alterar</button>'));
-    $newRow.append($('<td>').append('<button class="remove-row btn btn-primary">Excluir</button>'));
+    $newRow.append($('<td>').append('<button class="atualizar-row btn btn-primary" style="margin-right: 0px;">Alterar</button> <button class="remove-row btn btn-primary">Excluir</button>'));
+    $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].Id" value="' + id + '">'));
 
     $table.find('tbody').append($newRow);
 }
@@ -223,13 +221,14 @@ function reorganizarIndices() {
 function validarCPFExistente(cpf) {
     var cpfExistente = false;
     var cpfCliente = obj.CPF.NumeroCPF;
-    if (cpf === cpfCliente) {
+    cleanCPF = limparCPF(cpf);
+    if (cleanCPF === cpfCliente) {
         cpfExistente = true;
         ModalDialog("Erro", "Um beneficiário não pode ter o mesmo CPF do cliente.");
     }
     $('#grid tbody tr').each(function () {
-        var cpfTabela = $(this).find('input[name*="CPF"]').val();
-        if (cpfTabela === cpf) {
+        var cpfTabela = limparCPF($(this).find('input[name*="CPF"]').val());
+        if (cpfTabela === cleanCPF) {
             ModalDialog("Erro", "Este CPF já foi cadastrado.");
             cpfExistente = true;
             return false;

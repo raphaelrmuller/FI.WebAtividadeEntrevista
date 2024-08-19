@@ -64,7 +64,7 @@ namespace WebAtividadeEntrevista.Controllers
                         IdCliente = model.Id,
                         Nome = x.Nome
                     }).ToList();
-                    boBeneficiario.IncluirAlterar(beneficiarios);
+                    boBeneficiario.IncluirAlterar(beneficiarios, model.Id);
                 }
                 return Json("Cadastro efetuado com sucesso");
             }
@@ -107,20 +107,21 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = model.Telefone,
                     CPF = model.CPF.NumeroCPF,
                 });
-                if (model.Beneficiarios!=null && model.Beneficiarios.Any())
-                {
-                    List<Beneficiario> beneficiarios = model.Beneficiarios.Select(x => new Beneficiario()
+
+                List<Beneficiario> beneficiarios = model.Beneficiarios == null ? new List<Beneficiario>() :
+                    model.Beneficiarios.Select(x => new Beneficiario()
                     {
-                        Id = x.Id,  
+                        Id = x.Id,
                         CPF = x.CPF.NumeroCPF,
                         IdCliente = model.Id,
                         Nome = x.Nome
                     }).ToList();
-                    boBeneficiario.IncluirAlterar(beneficiarios);
-                }
-                return Json("Cadastro alterado com sucesso");
+                boBeneficiario.IncluirAlterar(beneficiarios, model.Id);
             }
+
+            return Json("Cadastro alterado com sucesso");
         }
+
 
         [HttpGet]
         public ActionResult Alterar(long id)

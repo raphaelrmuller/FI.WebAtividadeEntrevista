@@ -16,10 +16,10 @@ namespace FI.AtividadeEntrevista.DAL
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("NOME", beneficiario.Nome));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));            
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
             parametros.Add(new System.Data.SqlClient.SqlParameter("ID", beneficiario.Id));
             base.Executar("FI_SP_AltBenef", parametros);
-        } 
+        }
         internal long Incluir(DML.Beneficiario beneficiario)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -86,10 +86,10 @@ namespace FI.AtividadeEntrevista.DAL
             return countInclusoes;
         }
 
-        internal long IncluirAlterarDeletar(List<Beneficiario> beneficiarios)
+        internal long IncluirAlterarDeletar(List<Beneficiario> beneficiarios, long idCliente)
         {
             int retorno = 0;
-            var beneficiariosExistentes = Listar(beneficiarios.First().IdCliente);
+            var beneficiariosExistentes = Listar(idCliente);
             foreach (var beneficiario in beneficiarios)
             {
                 if (beneficiario.Id > 0)
@@ -111,7 +111,7 @@ namespace FI.AtividadeEntrevista.DAL
                 }
             }
             return retorno;
-        }       
+        }
 
         internal void Excluir(long id)
         {
@@ -121,6 +121,6 @@ namespace FI.AtividadeEntrevista.DAL
             base.Executar("FI_SP_DelBenef", parametros);
         }
 
-        
+
     }
 }
