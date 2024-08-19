@@ -11,6 +11,10 @@ namespace FI.AtividadeEntrevista.DAL
 {
     internal class DaoBeneficiario : AcessoDados
     {
+        /// <summary>
+        /// Metodo que altera um beneficiario
+        /// </summary>
+        /// <param name="beneficiario"></param>
         internal void Alterar(DML.Beneficiario beneficiario)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -20,6 +24,12 @@ namespace FI.AtividadeEntrevista.DAL
             parametros.Add(new System.Data.SqlClient.SqlParameter("ID", beneficiario.Id));
             base.Executar("FI_SP_AltBenef", parametros);
         }
+       
+        /// <summary>
+        /// Metodo que inclui um beneficiario
+        /// </summary>
+        /// <param name="beneficiario"></param>
+        /// <returns></returns>
         internal long Incluir(DML.Beneficiario beneficiario)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -34,6 +44,11 @@ namespace FI.AtividadeEntrevista.DAL
             return ret;
         }
 
+        /// <summary>
+        /// Metodo que lista os beneficiarios de um cliente
+        /// </summary>
+        /// <param name="idCliente"></param>
+        /// <returns></returns>
         internal List<DML.Beneficiario> Listar(long idCliente)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -42,7 +57,11 @@ namespace FI.AtividadeEntrevista.DAL
             return Converter(ds);
         }
 
-
+        /// <summary>
+        /// Metodo que converte um dataset em uma lista de beneficiarios
+        /// </summary>
+        /// <param name="ds"></param>
+        /// <returns></returns>
         private List<DML.Beneficiario> Converter(DataSet ds)
         {
             List<DML.Beneficiario> lista = new List<DML.Beneficiario>();
@@ -63,6 +82,12 @@ namespace FI.AtividadeEntrevista.DAL
             return new List<DML.Beneficiario>();
         }
 
+        /// <summary>
+        /// Metodo que verifica a existencia de um beneficiario
+        /// </summary>
+        /// <param name="CPF"></param>
+        /// <param name="idCliente"></param>
+        /// <returns></returns>
         internal bool VerificarExistencia(string CPF, long idCliente)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -75,6 +100,11 @@ namespace FI.AtividadeEntrevista.DAL
             return ds.Tables[0].Rows.Count > 0;
         }
 
+        /// <summary>
+        /// Metodo que inclui uma lista de beneficiarios
+        /// </summary>
+        /// <param name="beneficiarios"></param>
+        /// <returns></returns>
         internal long Incluir(List<Beneficiario> beneficiarios)
         {
             int countInclusoes = 0;
@@ -85,7 +115,13 @@ namespace FI.AtividadeEntrevista.DAL
             }
             return countInclusoes;
         }
-
+        
+        /// <summary>
+        /// Metodo que inclui, altera e deleta beneficiarios
+        /// </summary>
+        /// <param name="beneficiarios"></param>
+        /// <param name="idCliente"></param>
+        /// <returns></returns>
         internal long IncluirAlterarDeletar(List<Beneficiario> beneficiarios, long idCliente)
         {
             int retorno = 0;
@@ -113,6 +149,10 @@ namespace FI.AtividadeEntrevista.DAL
             return retorno;
         }
 
+        /// <summary>
+        /// Metodo que exclui um beneficiario
+        /// </summary>
+        /// <param name="id"></param>
         internal void Excluir(long id)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();

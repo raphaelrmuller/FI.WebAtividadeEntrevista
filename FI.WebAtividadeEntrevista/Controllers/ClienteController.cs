@@ -30,7 +30,7 @@ namespace WebAtividadeEntrevista.Controllers
             BoCliente bo = new BoCliente();
             if (bo.VerificarExistencia(model.CPF))
             {
-                this.ModelState.AddModelError("CPF", "CPF cliente já cadastrado");
+                this.ModelState.AddModelError("CPF", "CPF já cadastrado para cliente.");
             }
             if (!this.ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace WebAtividadeEntrevista.Controllers
                         IdCliente = model.Id,
                         Nome = x.Nome
                     }).ToList();
-                    boBeneficiario.IncluirAlterar(beneficiarios, model.Id);
+                    boBeneficiario.IncluirAlterarExcluir(beneficiarios, model.Id);
                 }
                 return Json("Cadastro efetuado com sucesso");
             }
@@ -79,7 +79,7 @@ namespace WebAtividadeEntrevista.Controllers
 
             if (cli.CPF != model.CPF && bo.VerificarExistencia(model.CPF))
             {
-                this.ModelState.AddModelError("CPF", "CPF cliente já cadastrado");
+                this.ModelState.AddModelError("CPF", "CPF já cadastrado para cliente.");
             }
 
             if (!this.ModelState.IsValid)
@@ -116,12 +116,11 @@ namespace WebAtividadeEntrevista.Controllers
                         IdCliente = model.Id,
                         Nome = x.Nome
                     }).ToList();
-                boBeneficiario.IncluirAlterar(beneficiarios, model.Id);
+                boBeneficiario.IncluirAlterarExcluir(beneficiarios, model.Id);
             }
 
             return Json("Cadastro alterado com sucesso");
         }
-
 
         [HttpGet]
         public ActionResult Alterar(long id)

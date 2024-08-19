@@ -24,7 +24,7 @@ namespace FI.WebAtividadeEntrevista.Models.Attributes
 
             if (!VerifyIsValid(cleancpf))
             {
-                return new ValidationResult($"O CPF informado é inválido.{cpf}");
+                return new ValidationResult($"O CPF {cpf} é inválido. ({GetEntityName(validationContext.ObjectType)}).");
             }
 
             return ValidationResult.Success;
@@ -82,6 +82,18 @@ namespace FI.WebAtividadeEntrevista.Models.Attributes
 
             return cpf.EndsWith(digito);
         }
-    }
+        private string GetEntityName(Type objectType)
+        {
+            // Pega o nome da classe sem o sufixo "Model"
+            var name = objectType.Name;
 
+            // Se o nome contiver "Model" no final, remove essa parte
+            if (name.EndsWith("Model"))
+            {
+                name = name.Substring(0, name.Length - 5); // Remove "Model"
+            }
+
+            return name;
+        }
+    }
 }

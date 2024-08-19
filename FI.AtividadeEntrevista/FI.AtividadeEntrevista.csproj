@@ -52,8 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DAL\Beneficiario\Procedures\dbo.FI_SP_IncBeneficiario.sql" />
     <Content Include="DAL\Beneficiario\Procedures\dbo.FI_SP_PesqBeneficiario.sql" />
+    <Content Include="DAL\Beneficiario\Procedures\FI_SP_AltBenef.sql" />
+    <Content Include="DAL\Beneficiario\Procedures\FI_SP_DelBenef.sql" />
     <Content Include="DAL\Beneficiario\Procedures\FI_SP_IncBeneficiario.sql" />
     <Content Include="DAL\Beneficiario\Procedures\FI_SP_PesqBeneficiario.sql" />
     <Content Include="DAL\Beneficiario\Procedures\FI_SP_VerificaBeneficiarios.sql" />
