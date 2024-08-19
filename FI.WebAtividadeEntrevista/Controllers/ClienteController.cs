@@ -111,6 +111,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     List<Beneficiario> beneficiarios = model.Beneficiarios.Select(x => new Beneficiario()
                     {
+                        Id = x.Id,  
                         CPF = x.CPF.NumeroCPF,
                         IdCliente = model.Id,
                         Nome = x.Nome

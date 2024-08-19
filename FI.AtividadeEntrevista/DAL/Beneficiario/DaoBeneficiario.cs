@@ -1,4 +1,5 @@
-﻿using FI.AtividadeEntrevista.DML;
+﻿using FI.AtividadeEntrevista.BLL;
+using FI.AtividadeEntrevista.DML;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,10 +15,9 @@ namespace FI.AtividadeEntrevista.DAL
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
-            parametros.Add(new System.Data.SqlClient.SqlParameter("ID", beneficiario.Id));
             parametros.Add(new System.Data.SqlClient.SqlParameter("NOME", beneficiario.Nome));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", beneficiario.IdCliente));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));            
+            parametros.Add(new System.Data.SqlClient.SqlParameter("ID", beneficiario.Id));
             base.Executar("FI_SP_AltBenef", parametros);
         } 
         internal long Incluir(DML.Beneficiario beneficiario)
@@ -86,19 +86,41 @@ namespace FI.AtividadeEntrevista.DAL
             return countInclusoes;
         }
 
-        /*
-        internal void Alterar(DML.Beneficiario beneficiario)
+        internal long IncluirAlterarDeletar(List<Beneficiario> beneficiarios)
         {
-        }
+            int retorno = 0;
+            var beneficiariosExistentes = Listar(beneficiarios.First().IdCliente);
+            foreach (var beneficiario in beneficiarios)
+            {
+                if (beneficiario.Id > 0)
+                {
+                    Alterar(beneficiario);
+                }
+                else
+                {
+                    Incluir(beneficiario);
+                }
+                retorno++;
+            }
+            foreach (var beneficiario in beneficiariosExistentes)
+            {
+                if (!beneficiarios.Any(b => b.Id == beneficiario.Id))
+                {
+                    Excluir(beneficiario.Id);
+                    retorno++;
+                }
+            }
+            return retorno;
+        }       
 
         internal void Excluir(long id)
         {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("ID", id));
+            base.Executar("FI_SP_DelBenef", parametros);
         }
 
-        internal bool BeneficiarioExistente(string cpf)
-        {
-            return false;
-        }
-        */
+        
     }
 }

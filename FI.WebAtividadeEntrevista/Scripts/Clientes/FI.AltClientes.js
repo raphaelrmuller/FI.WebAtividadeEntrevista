@@ -11,7 +11,7 @@
         $('#formCadastro #Telefone').val(obj.Telefone);
         var cpfField = $('#formCadastro #CPF');
         cpfField.val(obj.CPF.NumeroCPF);
-        formatarCPF(cpfField[0]);
+        formatarCPFInput(cpfField[0]);
     }
 
     $('#formCadastro').submit(function (e) {
@@ -21,8 +21,10 @@
         $('#grid tbody tr').each(function () {
             var nome = $(this).find('input[name*="Nome"]').val();
             var cpf = $(this).find('input[name*="CPF"]').val();
+            var idb = $(this).find('input[name*="Id"]').val();
 
             beneficiarios.push({
+                Id: idb,
                 Nome: nome,
                 "CPF.NumeroCPF": cpf
             });
@@ -62,19 +64,18 @@
         var cpf = $('#CPFBenef').val();
 
         if (nome && cpf) {
-            if (validarCPFExistente(cpf)) {
-                ModalDialog("Erro", "Este CPF já foi cadastrado.");
-            } else {
-                AddRowGrid(nome, cpf);
+            if (validarCPFExistente(cpf) === false) {
+                AddRowGrid(nome, cpf, undefined, $('#IDBENEF').val());
                 $('#NomeBenef').val('');  // Limpa o campo de nome
                 $('#CPFBenef').val('');   // Limpa o campo de CPF
+                $('#IDBENEF').val('');   // Limpa o campo de CPF
             }
         } else {
             ModalDialog("Erro", "Por favor, preencha todos os campos.");
         }
     });
 
-    // Eventos delegados para as ações de alterar e excluir
+   
     $('#grid').on('click', '.remove-row', function () {
         var $row = $(this).closest('tr');
         $row.remove();
@@ -83,8 +84,11 @@
 
     $('#grid').on('click', '.atualizar-row', function () {
         var $row = $(this).closest('tr');
+        var cpfb = formatarCPF($row.find('input[name*="CPF"]').val());
+
         $('#NomeBenef').val($row.find('input[name*="Nome"]').val());
-        $('#CPFBenef').val($row.find('input[name*="CPF"]').val());
+        $('#CPFBenef').val(cpfb).val();
+        $('#IDBENEF').val($row.find('input[name*="Id"]').val());
         $row.remove();
         reorganizarIndices();
     });
@@ -123,6 +127,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
         '            </div>' +
         '            <div class="modal-body">' +
         '                <div class="row">' +
+        '                    <input type="text" id="IDBENEF">'+
         '                    <div class="col-md-4">' +
         '                        <div class="form-group">' +
         '                            <label for="Nome">Nome:</label>' +
@@ -132,7 +137,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
         '                    <div class="col-md-4">' +
         '                        <div class="form-group">' +
         '                            <label for="CPF">CPF:</label>' +
-        '                            <input required="required" type="text" class="form-control" id="CPFBenef" name="CPF" placeholder="Ex.: 333.333.333-33" maxlength="30">' +
+        '                            <input required="required" type="text" class="form-control" id="CPFBenef" name="CPF" placeholder="Ex.: 333.333.333-33" maxlength="14" oninput="formatarCPFInput(this)">' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="col-md-4">' +
@@ -146,6 +151,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
         '                        <table id="grid" class="table table-lg">' +
         '                            <thead>' +
         '                                <tr>' +
+        '                                    <th>Id</th>' +
         '                                    <th>Nome</th>' +
         '                                    <th>CPF</th>' +
         '                                    <th>Ações</th>' +
@@ -169,7 +175,7 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
     // Preenche a tabela com os beneficiários já existentes
     if (beneficiarios && beneficiarios.length > 0) {
         beneficiarios.forEach(function (beneficiario, index) {
-            AddRowGrid(beneficiario.Nome, beneficiario.CPF.NumeroCPF, index);
+            AddRowGrid(beneficiario.Nome, beneficiario.CPF.NumeroCPF, index, beneficiario.Id);
         });
     }
 
@@ -181,15 +187,20 @@ function ModalDialogBeneficiarios(beneficiarios, open) {
     }
 }
 
-function AddRowGrid(nome, cpf, index) {
+
+function AddRowGrid(nome, cpf, index, id) {
     var $table = $('#grid');
     if (index === undefined) {
         index = $table.find('tbody tr').length;
     }
 
+    // Se `id` não for fornecido, defina-o como um valor padrão
+    id = id || -1;
+
     let $newRow = $('<tr>');
+    $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].Id" value="' + id + '">' + id));
     $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].Nome" value="' + nome + '">' + nome));
-    $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].CPF" value="' + cpf + '">' + cpf));
+    $newRow.append($('<td>').append('<input type="hidden" name="Beneficiarios[' + index + '].CPF" value="' + cpf + '">' + formatarCPF(cpf)));
     $newRow.append($('<td>').append('<button class="atualizar-row btn btn-primary" style="margin-right: 0px;">Alterar</button>'));
     $newRow.append($('<td>').append('<button class="remove-row btn btn-primary">Excluir</button>'));
 
@@ -211,12 +222,17 @@ function reorganizarIndices() {
 
 function validarCPFExistente(cpf) {
     var cpfExistente = false;
-
+    var cpfCliente = obj.CPF.NumeroCPF;
+    if (cpf === cpfCliente) {
+        cpfExistente = true;
+        ModalDialog("Erro", "Um beneficiário não pode ter o mesmo CPF do cliente.");
+    }
     $('#grid tbody tr').each(function () {
         var cpfTabela = $(this).find('input[name*="CPF"]').val();
         if (cpfTabela === cpf) {
+            ModalDialog("Erro", "Este CPF já foi cadastrado.");
             cpfExistente = true;
-            return false; // Interrompe o loop
+            return false;
         }
     });
 

@@ -25,20 +25,8 @@ namespace FI.AtividadeEntrevista.BLL
         /// <param name="beneficiario">Objeto de beneficiario</param>
         public long IncluirAlterar(List<DML.Beneficiario> beneficiarios)
         {
-            DAL.DaoBeneficiario daoBeneficiario = new DAL.DaoBeneficiario();
-            int retorno = 0;
-            foreach (var beneficiario in beneficiarios)
-            {                
-                if (beneficiario.Id > 0)
-                {
-                    daoBeneficiario.Alterar(beneficiario);
-                }else
-                {
-                    daoBeneficiario.Incluir(beneficiario);
-                }
-                retorno++;
-            }
-            return retorno;
+            DAL.DaoBeneficiario daoBeneficiario = new DAL.DaoBeneficiario();            
+            return daoBeneficiario.IncluirAlterarDeletar(beneficiarios);            
         }
 
         /// <summary>
